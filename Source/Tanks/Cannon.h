@@ -69,13 +69,13 @@ private:
 	bool bReadyToShoot = true;
 	void ResetShootState();
 	FTimerHandle TimerHandle;
+	FTimerHandle TimerHandleForSeries;
 	void StartShootTimer();
 	bool bProjectileStock = true;
 	void ProjectileDecrease();
 	
 	bool bStartToShootSeries = false;
-	bool bReadyToShootSeries = false;
-	void StartShootTimerSeries();
-	void ResetShootStateSeries();
 	void FireSeriesTick();
+	int FireCountInSeriesLocal = FireCountInSeries;
+	
 };

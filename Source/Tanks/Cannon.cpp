@@ -26,6 +26,17 @@ ACannon::ACannon()
 void ACannon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//таймер, который запускает серию выстрелов, если bStartToShootSeries = 1
+	GetWorld()->GetTimerManager().SetTimer(TimerHandleForSeries, FTimerDelegate::CreateUObject(this, &ACannon::FireSeriesTick), 1/FireRateSeries, true);
+}
+
+// Called every frame
+void ACannon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL: ")) + FString::Printf(TEXT("%d"), ProjectileCount));
 	
 }
 
@@ -34,34 +45,10 @@ void ACannon::ResetShootState()
 	bReadyToShoot = true;
 }
 
-void ACannon::ResetShootStateSeries()
-{
-	bReadyToShootSeries = true;
-}
-
-// Called every frame
-void ACannon::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (bStartToShootSeries)
-		FireSeriesTick();
-
-	GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL: ")) + FString::Printf(TEXT("%d"), ProjectileCount));
-	
-	//GEngine->AddOnScreenDebugMessage(123444, 10, FColor::Blue, FString::Printf(TEXT("%f"), GetWorld()->GetTimerManager().GetTimerElapsed(TimerHandle)));
-}
-
 void ACannon::StartShootTimer()
 {
 	bReadyToShoot = false;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateUObject(this, &ACannon::ResetShootState), 1/FireRate, false);
-}
-
-void ACannon::StartShootTimerSeries()
-{
-	bReadyToShootSeries = false;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateUObject(this, &ACannon::ResetShootStateSeries), 1/FireRateSeries, false);
 }
 
 void ACannon::ProjectileDecrease()
@@ -71,16 +58,11 @@ void ACannon::ProjectileDecrease()
 
 	if (ProjectileCount == 0)
 		bProjectileStock = false;
- 
-	
 }
 
 void ACannon::Shoot()
 {
-	if (!bReadyToShoot)
-		return;
-
-	if (!bProjectileStock)
+	if (!bReadyToShoot || !bProjectileStock)
 		return;
 	
 	switch (Type)
@@ -144,35 +126,33 @@ void ACannon::StartFireSeries()
 	{
 		bReadyToShoot = false;
 		bStartToShootSeries = true;
-		bReadyToShootSeries = true;
 	}
 }
 
 void ACannon::FireSeriesTick()
 {
-	static int FireCountInSeriesLocal = FireCountInSeries;
-	
-	if (ProjectileCount > 0 && FireCountInSeriesLocal > 0 && bReadyToShootSeries)
+	if (bStartToShootSeries)
 	{
-		switch (Type)
+		if (FireCountInSeriesLocal > 0)
 		{
-		case ECannonType::FireProjectile:
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Puf-Puf SERIES")));
-			break;
-		case ECannonType::FireTrace:
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Piu-Piu SERIES")));
-			break;
+			switch (Type)
+			{
+			case ECannonType::FireProjectile:
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Puf-Puf SERIES")));
+				break;
+			case ECannonType::FireTrace:
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Piu-Piu SERIES")));
+				break;
+			}
+			FireCountInSeriesLocal--;
 		}
-		FireCountInSeriesLocal--;
-		StartShootTimerSeries();
-	}
 	
-	if (FireCountInSeriesLocal == 0)
-	{
-		ProjectileDecrease();
-		bReadyToShoot = true;
-		bStartToShootSeries = false;
-		FireCountInSeriesLocal = FireCountInSeries;
-		bReadyToShootSeries = false;
+		if (FireCountInSeriesLocal == 0)
+		{
+			FireCountInSeriesLocal = FireCountInSeries;
+			ProjectileDecrease();
+			bReadyToShoot = true;
+			bStartToShootSeries = false;
+		}
 	}
 }

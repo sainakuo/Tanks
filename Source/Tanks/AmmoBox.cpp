@@ -37,13 +37,28 @@ void AAmmoBox::Tick(float DeltaSeconds)
 
 void AAmmoBox::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	/*
+	ATankPawn * playerPawn = Cast<ATankPawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if(OtherActor == playerPawn)
+	{
+		playerPawn->SetupCannon(CannonClass);
+
+		if (!bInfinity)
+			Destroy();
+	}*/
+
+
+	
 	auto Tank = Cast<ATankPawn>(OtherActor);
 
 	if (Tank)
+	{
 		Tank->SetupCannon(CannonClass);
+		if (!bInfinity)
+			Destroy();
+	}
 	
-	if (!bInfinity)
-		Destroy();
+
 		
 }
 
