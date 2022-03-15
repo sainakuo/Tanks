@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Ammo params")
 	bool bInfinity = false;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Ammo params")
+	int ProjectilePlusNum = 10;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

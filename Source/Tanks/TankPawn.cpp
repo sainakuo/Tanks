@@ -38,11 +38,23 @@ ATankPawn::ATankPawn()
 
 void ATankPawn::SetupCannon(const TSubclassOf<ACannon>& CannonClass)
 {
-	CannonType = CannonClass;
-	
-	if (CannonType)
+	if (Cannon)
 	{
-		Cannon = GetWorld()->SpawnActor<ACannon>(CannonType, CannonPosition->GetComponentTransform());
+		
+		Cannon->Destroy();
+			
+		Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, CannonPosition->GetComponentTransform());
+
+
+		if (Cannon->Type == ECannonType::FireProjectile)
+		{
+			Cannon->ProjectileCount = ProjectileCount1;
+		}
+		else
+		{
+			Cannon->ProjectileCount = ProjectileCount2;
+		}
+		
 		Cannon->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	}
 }
@@ -54,7 +66,12 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	SetupCannon(CannonType);
+	Cannon = GetWorld()->SpawnActor<ACannon>(CannonType, CannonPosition->GetComponentTransform());
+	Cannon->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
+
+	ProjectileCount1 = Cannon->ProjectileCount;
+	ProjectileCount2 = Cannon->ProjectileCount;
+	
 }
 
 void ATankPawn::Destroyed()
@@ -139,6 +156,34 @@ void ATankPawn::StartFireSeries()
 	if (Cannon)
 		Cannon->StartFireSeries();
 }
+
+void ATankPawn::ChangeCannon()
+{
+	if (Cannon)
+	{
+		if (Cannon->Type == ECannonType::FireProjectile)
+		{
+			ProjectileCount1 = Cannon->ProjectileCount;
+			SetupCannon(CannonTypeSecond);
+			Cannon->ProjectileCount = ProjectileCount2;
+		}
+		else
+		{
+			ProjectileCount2 = Cannon->ProjectileCount;
+			SetupCannon(CannonType);
+			Cannon->ProjectileCount = ProjectileCount1;
+		}
+	}
+}
+
+void ATankPawn::ProjectilePlus(int num)
+{
+	if (Cannon)
+	{
+		Cannon->ProjectileCount += num;
+	}
+}
+
 
 
 

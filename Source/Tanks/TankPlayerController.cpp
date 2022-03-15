@@ -23,6 +23,8 @@ void ATankPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("FireSeries", IE_Pressed, this,  &ATankPlayerController::StartFireSeries);
 
+	InputComponent->BindAction("ChangeCannon", IE_Pressed, this,  &ATankPlayerController::ChangeCannon);
+
 	bShowMouseCursor = true;
 }
 
@@ -55,6 +57,11 @@ void ATankPlayerController::FireSpecial()
 void ATankPlayerController::StartFireSeries()
 {
 	TankPawn->StartFireSeries();
+}
+
+void ATankPlayerController::ChangeCannon()
+{
+	TankPawn->ChangeCannon();
 }
 
 

@@ -33,6 +33,6 @@ protected:
 	void OnShoot();
 	void FireSpecial();
 	void StartFireSeries();
-	
+	void ChangeCannon();
 
 };

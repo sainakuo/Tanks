@@ -101,18 +101,36 @@ void ACannon::Shoot()
 
 void ACannon::FireSpecial()
 {
-	if (!bReadyToShoot)
-		return;
-
-	if (!bProjectileStock)
+	if (!bReadyToShoot || !bProjectileStock)
 		return;
 	
 	switch (Type)
 	{
 	case ECannonType::FireProjectile:
+		GetWorld()->SpawnActor<AProjectile>(ProjectileClassSpecial, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Puf-Puf SPECIAL")));
 		break;
 	case ECannonType::FireTrace:
+		auto Start = ProjectileSpawnPoint->GetComponentLocation();
+		auto End = Start + ProjectileSpawnPoint->GetForwardVector()*FireRange;
+		FCollisionObjectQueryParams Params;
+		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_Vehicle);
+		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+		
+		FHitResult Result;
+		bool HasHit = GetWorld()->LineTraceSingleByObjectType(Result, Start, End, Params);
+
+		if (HasHit)
+		{
+			End = Result.Location;
+			if (Result.Actor.IsValid())
+				Result.Actor->Destroy();
+			
+		}
+
+		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1, 0, 15);
+		
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Piu-Piu SPECIAL")));
 		break;
 	}

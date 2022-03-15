@@ -50,6 +50,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	TSubclassOf<AProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	TSubclassOf<AProjectile> ProjectileClassSpecial;
 	
 	void Shoot();
 
