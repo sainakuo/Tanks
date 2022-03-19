@@ -23,8 +23,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UStaticMeshComponent* Mesh;
 
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Ammo params")
+	//TSubclassOf<ACannon> CannonClass;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Ammo params")
-	TSubclassOf<ACannon> CannonClass;
+	bool CannonNumber; // 0 - Cannon, 1 - Cannon Second
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Ammo params")
 	bool bInfinity = false;

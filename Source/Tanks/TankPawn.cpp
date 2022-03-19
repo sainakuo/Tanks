@@ -36,26 +36,18 @@ ATankPawn::ATankPawn()
 	Camera->bUsePawnControlRotation = false;
 }
 
-void ATankPawn::SetupCannon(const TSubclassOf<ACannon>& CannonClass)
+void ATankPawn::SetupCannon(bool CannonNumber)
 {
-	if (Cannon)
+
+	if (CannonNumber == 0)
 	{
-		
-		Cannon->Destroy();
-			
-		Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, CannonPosition->GetComponentTransform());
-
-
-		if (Cannon->Type == ECannonType::FireProjectile)
-		{
-			Cannon->ProjectileCount = ProjectileCount1;
-		}
-		else
-		{
-			Cannon->ProjectileCount = ProjectileCount2;
-		}
-		
-		Cannon->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		CurrentCannon = 1;
+		ChangeCannon();
+	}
+	else if (CannonNumber == 1)
+	{
+		CurrentCannon = 0;
+		ChangeCannon();
 	}
 }
 
@@ -68,9 +60,10 @@ void ATankPawn::BeginPlay()
 
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonType, CannonPosition->GetComponentTransform());
 	Cannon->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
-
-	ProjectileCount1 = Cannon->ProjectileCount;
-	ProjectileCount2 = Cannon->ProjectileCount;
+	
+	CannonSecond = GetWorld()->SpawnActor<ACannon>(CannonTypeSecond, CannonPosition->GetComponentTransform());
+	CannonSecond->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	CannonSecond->SetActorHiddenInGame(true); //hide the second cannon
 	
 }
 
@@ -78,6 +71,9 @@ void ATankPawn::Destroyed()
 {
 	if (Cannon)
 		Cannon->Destroy();
+	
+	if (CannonSecond)
+		CannonSecond->Destroy();
 }
 
 
@@ -91,6 +87,7 @@ void ATankPawn::Tick(float DeltaTime)
 	RotateTank(DeltaTime);
 
 	RotateCannon(DeltaTime);
+
 }
 
 // Called to bind functionality to input
@@ -139,51 +136,77 @@ void ATankPawn::RotateCannon(float DeltaTime)
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretMesh->GetComponentRotation(), OldRotation, TurretAcceleration ));
 }
 
+void ATankPawn::PrintProjectile()
+{
+	GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON: ")) + FString::Printf(TEXT("%d"), Cannon->ProjectileCount));
+	GEngine->AddOnScreenDebugMessage(12345, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON SECOND: ")) + FString::Printf(TEXT("%d"), CannonSecond->ProjectileCount));
+}
+
 void ATankPawn::Shoot()
 {
-	if (Cannon)
+	if (CurrentCannon == 0 && Cannon)
+	{
 		Cannon->Shoot();
+	}
+	else if (CurrentCannon == 1 && CannonSecond)
+	{
+		CannonSecond->Shoot();
+	}
+	
+	PrintProjectile();
 }
 
 void ATankPawn::FireSpecial()
 {
-	if (Cannon)
+	if (CurrentCannon == 0 && Cannon)
+	{
 		Cannon->FireSpecial();
+	}
+	else if (CurrentCannon == 1 && CannonSecond)
+	{
+		CannonSecond->FireSpecial();
+	}
 }
 
 void ATankPawn::StartFireSeries()
 {
-	if (Cannon)
+	if (CurrentCannon == 0 && Cannon)
+	{
 		Cannon->StartFireSeries();
+	}
+	else if (CurrentCannon == 1 && CannonSecond)
+	{
+		CannonSecond->StartFireSeries();
+	}
 }
 
 void ATankPawn::ChangeCannon()
 {
-	if (Cannon)
+	if (CurrentCannon == 0 && Cannon)
 	{
-		if (Cannon->Type == ECannonType::FireProjectile)
-		{
-			ProjectileCount1 = Cannon->ProjectileCount;
-			SetupCannon(CannonTypeSecond);
-			Cannon->ProjectileCount = ProjectileCount2;
-		}
-		else
-		{
-			ProjectileCount2 = Cannon->ProjectileCount;
-			SetupCannon(CannonType);
-			Cannon->ProjectileCount = ProjectileCount1;
-		}
+		Cannon -> SetActorHiddenInGame(true);
+		CannonSecond -> SetActorHiddenInGame(false);
+		CurrentCannon = 1;
+	}
+	else if (CurrentCannon == 1 && CannonSecond)
+	{
+		Cannon -> SetActorHiddenInGame(false);
+		CannonSecond -> SetActorHiddenInGame(true);
+		CurrentCannon = 0;
 	}
 }
 
 void ATankPawn::ProjectilePlus(int num)
 {
-	if (Cannon)
+	if (CurrentCannon == 0 && Cannon)
 	{
 		Cannon->ProjectileCount += num;
 	}
+	else if (CurrentCannon == 1 && CannonSecond)
+	{
+		CannonSecond->ProjectileCount += num;
+	}
+	
+	PrintProjectile();
 }
-
-
-
 

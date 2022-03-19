@@ -36,7 +36,7 @@ void ACannon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL: ")) + FString::Printf(TEXT("%d"), ProjectileCount));
+	//GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL: ")) + FString::Printf(TEXT("%d"), ProjectileCount));
 	
 }
 

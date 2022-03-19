@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
 	ACannon* Cannon;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
+	ACannon* CannonSecond;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
 	float MoveSpeed = 100;
 	
@@ -91,7 +94,7 @@ public:
 	virtual void Destroyed() override;
 
 	UFUNCTION()
-	void SetupCannon(const TSubclassOf<ACannon>& CannonClass);
+	void SetupCannon(bool CannonNumber);
 	
 	UFUNCTION()
 	void ProjectilePlus(int num);
@@ -100,6 +103,7 @@ private:
 	void MoveTank(float DeltaTime);
 	void RotateTank(float DeltaTime);
 	void RotateCannon(float DeltaTime);
+	void PrintProjectile();
 	void SetProjectileCount();
 	
 	float MoveScaleCurrent = 0;
@@ -108,8 +112,7 @@ private:
 	float RotateScaleCurrent = 0;
 	float RotateScaleTarget = 0;
 
-	int ProjectileCount1;
-	int ProjectileCount2;
+	bool CurrentCannon = 0; // 0 - Cannon, 1 - CannonSecond
 
 	class ATankPlayerController* TankController;
 	

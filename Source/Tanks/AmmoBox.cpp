@@ -41,7 +41,7 @@ void AAmmoBox::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 
 	if (Tank)
 	{
-		Tank->SetupCannon(CannonClass);
+		Tank->SetupCannon(CannonNumber);
 		Tank->ProjectilePlus(ProjectilePlusNum);
 		
 		if (!bInfinity)
