@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AmmoBox.h"
 #include "Cannon.h"
+#include "CommonShooter.h"
 #include "DamageTarget.h"
 #include "HealthComponent.h"
 #include "Camera/CameraComponent.h"
@@ -14,7 +15,7 @@
 #include "TankPawn.generated.h"
 
 UCLASS()
-class TANKS_API ATankPawn : public APawn, public IDamageTarget
+class TANKS_API ATankPawn : public ACommonShooter, public IDamageTarget
 {
 	GENERATED_BODY()
 
@@ -27,33 +28,18 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
+	ACannon* CannonSecond;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
-	UStaticMeshComponent* BodyMesh;
-	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
-	UStaticMeshComponent* TurretMesh;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
+	TSubclassOf<ACannon> CannonTypeSecond;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
 	USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
 	UCameraComponent* Camera;
-	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
-	UArrowComponent* CannonPosition;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
-	TSubclassOf<ACannon> CannonType;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
-	TSubclassOf<ACannon> CannonTypeSecond;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
-	ACannon* Cannon;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
-	ACannon* CannonSecond;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
 	float MoveSpeed = 100;
@@ -69,9 +55,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
     float TurretAcceleration = 0.1;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
-	UHealthComponent* HealthComponent;
 
 
 

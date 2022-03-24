@@ -63,7 +63,7 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	Cannon = GetWorld()->SpawnActor<ACannon>(CannonType, CannonPosition->GetComponentTransform());
+	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, CannonPosition->GetComponentTransform());
 	Cannon->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	
 	CannonSecond = GetWorld()->SpawnActor<ACannon>(CannonTypeSecond, CannonPosition->GetComponentTransform());

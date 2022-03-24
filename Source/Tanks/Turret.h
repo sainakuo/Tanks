@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Cannon.h"
+#include "CommonShooter.h"
 #include "DamageTarget.h"
 #include "HealthComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -12,7 +13,7 @@
 #include "Turret.generated.h"
 
 UCLASS()
-class TANKS_API ATurret : public AActor, public IDamageTarget
+class TANKS_API ATurret : public ACommonShooter, public IDamageTarget
 {
 	GENERATED_BODY()
 	
@@ -22,25 +23,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCapsuleComponent* Collision;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UStaticMeshComponent* BodyMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	USphereComponent* RangeSphere;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
-	UArrowComponent* CannonPosition;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Fire Params")
-	TSubclassOf<ACannon> CannonClass;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
-	ACannon* Cannon;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Fire Params")
 	float TargetingSpeed = 0.1f;
 
@@ -51,7 +34,7 @@ public:
 	int AimSlack = 5;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UHealthComponent* HealthComponent;
+	USphereComponent* RangeSphere;
 
 	virtual void TakeDamage(FDamageData Damage) override;
 
