@@ -3,6 +3,7 @@
 
 #include "Cannon.h"
 
+#include "DamageTarget.h"
 #include "DrawDebugHelpers.h"
 
 
@@ -86,8 +87,16 @@ void ACannon::Shoot()
 		{
 			End = Result.Location;
 			if (Result.Actor.IsValid())
-				Result.Actor->Destroy();
-			
+			{
+				auto Target = Cast<IDamageTarget>(Result.Actor);
+				if (Target)
+				{
+					FDamageData DamageData;
+					DamageData.Instigator = this;
+					DamageData.DamageValue = LaserDamage;
+					Target -> TakeDamage(DamageData);
+				}
+			}
 		}
 
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 0.1, 0, 10);
@@ -125,7 +134,16 @@ void ACannon::FireSpecial()
 		{
 			End = Result.Location;
 			if (Result.Actor.IsValid())
-				Result.Actor->Destroy();
+			{
+				auto Target = Cast<IDamageTarget>(Result.Actor);
+				if (Target)
+				{
+					FDamageData DamageData;
+					DamageData.Instigator = this;
+					DamageData.DamageValue = LaserDamage;
+					Target -> TakeDamage(DamageData);
+				}
+			}
 			
 		}
 

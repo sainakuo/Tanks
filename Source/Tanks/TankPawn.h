@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "AmmoBox.h"
 #include "Cannon.h"
+#include "DamageTarget.h"
+#include "HealthComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Pawn.h"
@@ -12,13 +14,15 @@
 #include "TankPawn.generated.h"
 
 UCLASS()
-class TANKS_API ATankPawn : public APawn
+class TANKS_API ATankPawn : public APawn, public IDamageTarget
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
+
+	virtual void TakeDamage(FDamageData Damage) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -66,6 +70,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
     float TurretAcceleration = 0.1;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
+	UHealthComponent* HealthComponent;
+
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -104,7 +113,8 @@ private:
 	void RotateTank(float DeltaTime);
 	void RotateCannon(float DeltaTime);
 	void PrintProjectile();
-	void SetProjectileCount();
+	void OnDeath();
+	void OnHealthChanged(float CurrentHealth);
 	
 	float MoveScaleCurrent = 0;
 	float MoveScaleTarget = 0;

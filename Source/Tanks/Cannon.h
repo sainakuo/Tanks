@@ -53,6 +53,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	TSubclassOf<AProjectile> ProjectileClassSpecial;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	float LaserDamage = 4;
 	
 	void Shoot();
 

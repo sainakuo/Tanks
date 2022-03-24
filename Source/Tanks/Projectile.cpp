@@ -3,6 +3,9 @@
 
 #include "Projectile.h"
 
+#include "DamageTarget.h"
+#include "Engine/StaticMeshActor.h"
+
 // Sets default values
 AProjectile::AProjectile()
 {
@@ -39,9 +42,20 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	
 	if (OtherActor == this)
 		return;
+	
 	GetWorld()->GetTimerManager().ClearTimer(Timer);
+
+	auto Target = Cast<IDamageTarget>(OtherActor);
+
+	if (Target)
+	{
+		FDamageData DamageData;
+		DamageData.DamageValue = Damage;
+		DamageData.Instigator = this;
+		Target->TakeDamage(DamageData);
+	}
+
 	Destroy();
-	OtherActor->Destroy();
 }
 
 

@@ -8,6 +8,7 @@
 
 #include "TankPlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 ATankPawn::ATankPawn()
@@ -34,6 +35,10 @@ ATankPawn::ATankPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 	Camera->bUsePawnControlRotation = false;
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+	HealthComponent->OnDeath.AddUObject(this, &ATankPawn::OnDeath);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ATankPawn::OnHealthChanged);
 }
 
 void ATankPawn::SetupCannon(bool CannonNumber)
@@ -76,6 +81,12 @@ void ATankPawn::Destroyed()
 		CannonSecond->Destroy();
 }
 
+
+void ATankPawn::TakeDamage(FDamageData Damage)
+{
+	if (HealthComponent)
+		HealthComponent->TakeDamage(Damage);
+}
 
 // Called every frame
 void ATankPawn::Tick(float DeltaTime)
@@ -142,6 +153,16 @@ void ATankPawn::PrintProjectile()
 	GEngine->AddOnScreenDebugMessage(12345, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON SECOND: ")) + FString::Printf(TEXT("%d"), CannonSecond->ProjectileCount));
 }
 
+void ATankPawn::OnDeath()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
+}
+
+void ATankPawn::OnHealthChanged(float CurrentHealth)
+{
+	GEngine->AddOnScreenDebugMessage(12333, 10, FColor::Red, FString::Printf(TEXT("Health: %f"), CurrentHealth));
+}
+
 void ATankPawn::Shoot()
 {
 	if (CurrentCannon == 0 && Cannon)
@@ -166,6 +187,8 @@ void ATankPawn::FireSpecial()
 	{
 		CannonSecond->FireSpecial();
 	}
+	
+	PrintProjectile();
 }
 
 void ATankPawn::StartFireSeries()
@@ -178,6 +201,7 @@ void ATankPawn::StartFireSeries()
 	{
 		CannonSecond->StartFireSeries();
 	}
+	PrintProjectile();
 }
 
 void ATankPawn::ChangeCannon()

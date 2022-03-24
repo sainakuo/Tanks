@@ -29,6 +29,15 @@ ATurret::ATurret()
 
 	CannonPosition = CreateDefaultSubobject<UArrowComponent>("CannonPosition");
 	CannonPosition->SetupAttachment(TurretMesh);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+	HealthComponent->OnDeath.AddUObject(this, &ATurret::OnDeath);
+}
+
+void ATurret::TakeDamage(FDamageData Damage)
+{
+	if (HealthComponent)
+		HealthComponent->TakeDamage(Damage);
 }
 
 // Called when the game starts or when spawned
@@ -117,12 +126,17 @@ void ATurret::Targeting()
 
 	PlayerDirection.Normalize();
 
-	auto Angle = FMath::Acos(FVector::DotProduct(TargetingDirection, PlayerDirection));
+	auto Angle = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(TargetingDirection, PlayerDirection)));
 
 	if (Angle < AimSlack)
 	{
 		ATurret::Fire();
 	}
 	
+}
+
+void ATurret::OnDeath()
+{
+	Destroy();
 }
 

@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Cannon.h"
+#include "DamageTarget.h"
+#include "HealthComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "Turret.generated.h"
 
 UCLASS()
-class TANKS_API ATurret : public AActor
+class TANKS_API ATurret : public AActor, public IDamageTarget
 {
 	GENERATED_BODY()
 	
@@ -48,6 +50,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Fire Params")
 	int AimSlack = 5;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	UHealthComponent* HealthComponent;
+
+	virtual void TakeDamage(FDamageData Damage) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -72,5 +79,6 @@ private:
 	void FindNextTarget();
 	void Fire();
 	void Targeting();
+	void OnDeath();
 
 };
