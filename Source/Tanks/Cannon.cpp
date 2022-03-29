@@ -5,6 +5,8 @@
 
 #include "DamageTarget.h"
 #include "DrawDebugHelpers.h"
+#include "Components/AudioComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 // Sets default values
@@ -20,6 +22,12 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>("ProjectileSpawnPoint");
 	ProjectileSpawnPoint->SetupAttachment(RootComponent);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>("AudioEffect");
+	AudioEffect->SetupAttachment(Mesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>("ShootEffect");
+	ShootEffect->SetupAttachment(Mesh);
 	
 }
 
@@ -71,6 +79,8 @@ void ACannon::Shoot()
 	case ECannonType::FireProjectile:
 		GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Puf-Puf")));
+		ShootEffect->ActivateSystem();
+		AudioEffect->Play();
 		break;
 	case ECannonType::FireTrace:
 		auto Start = ProjectileSpawnPoint->GetComponentLocation();

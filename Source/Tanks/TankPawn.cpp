@@ -9,6 +9,8 @@
 #include "TankPlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 ATankPawn::ATankPawn()
@@ -39,6 +41,12 @@ ATankPawn::ATankPawn()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 	HealthComponent->OnDeath.AddUObject(this, &ATankPawn::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ATankPawn::OnHealthChanged);
+
+	DamageEffect = CreateDefaultSubobject<UParticleSystemComponent>("DamageEffect");
+	DamageEffect->SetupAttachment(BodyMesh);
+
+	DestructionEffect = CreateDefaultSubobject<UParticleSystemComponent>("DestructionEffect");
+	DestructionEffect->SetupAttachment(BodyMesh);
 }
 
 void ATankPawn::SetupCannon(bool CannonNumber)
@@ -142,7 +150,7 @@ void ATankPawn::RotateCannon(float DeltaTime)
 	if (!TankController)
 		return;
 	auto OldRotation = TurretMesh->GetComponentRotation();
-	FRotator TurretRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TankController->GetMouseWorldPosition());
+	FRotator TurretRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), TankController->GetShootTarget());
     OldRotation.Yaw = TurretRotation.Yaw;
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretMesh->GetComponentRotation(), OldRotation, TurretAcceleration ));
 }
@@ -155,11 +163,13 @@ void ATankPawn::PrintProjectile()
 
 void ATankPawn::OnDeath()
 {
+	DestructionEffect->ActivateSystem();
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
 }
 
 void ATankPawn::OnHealthChanged(float CurrentHealth)
 {
+	DamageEffect->ActivateSystem();
 	GEngine->AddOnScreenDebugMessage(12333, 10, FColor::Red, FString::Printf(TEXT("Health: %f"), CurrentHealth));
 }
 

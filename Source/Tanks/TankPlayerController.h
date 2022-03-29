@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TankPawn.h"
+#include "TargetController.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
@@ -11,7 +12,7 @@
  * 
  */
 UCLASS()
-class TANKS_API ATankPlayerController : public APlayerController
+class TANKS_API ATankPlayerController : public APlayerController, public ITargetController
 {
 	GENERATED_BODY()
 
@@ -24,7 +25,7 @@ public:
 	ATankPlayerController();
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaSeconds) override;
-	FVector GetMouseWorldPosition() const;
+	virtual FVector GetShootTarget() const override;
 
 protected:
 	virtual void BeginPlay() override;

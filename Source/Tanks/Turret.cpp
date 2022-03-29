@@ -3,6 +3,7 @@
 
 #include "Turret.h"
 
+#include "DrawDebugHelpers.h"
 #include "Commandlets/EditorCommandlets.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -109,14 +110,36 @@ void ATurret::FindNextTarget()
 
 void ATurret::Fire()
 {
-	if (Cannon)
-		Cannon->Shoot();
+	if (!Target.IsValid())
+		return;
+
+	FHitResult Result;
+	
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Cannon);
+	Params.bTraceComplex = true;
+	
+	if (GetWorld()->LineTraceSingleByChannel(Result, TurretMesh->GetComponentLocation(), Target->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params))
+	{
+		if (Result.Actor == Target.Get())
+		{
+			if (Cannon)
+				Cannon->Shoot();
+		}
+	}
 }
 
 void ATurret::Targeting()
 {
 	if (!Target.IsValid())
-		return;
+	{
+		FindNextTarget();
+		if (!Target.IsValid())
+		{
+			return;
+		}
+	}
 
 	auto TargetRotation = UKismetMathLibrary::FindLookAtRotation(TurretMesh->GetComponentLocation(), Target->GetActorLocation());
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretMesh->GetComponentRotation(), TargetRotation, TargetingSpeed));

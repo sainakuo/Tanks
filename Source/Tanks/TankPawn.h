@@ -56,9 +56,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
     float TurretAcceleration = 0.1;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UParticleSystemComponent* DamageEffect;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UParticleSystemComponent* DestructionEffect;
 
+public:
 
-public:	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI|Move")
+	FName WaypointTag;
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

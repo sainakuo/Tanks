@@ -86,7 +86,7 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 	
 }
 
-FVector ATankPlayerController::GetMouseWorldPosition() const
+FVector ATankPlayerController::GetShootTarget() const
 {
 	return MouseWorldPosition;
 }
