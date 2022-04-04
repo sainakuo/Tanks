@@ -42,7 +42,7 @@ protected:
 	UCameraComponent* Camera;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
-	float MoveSpeed = 100;
+	float MoveSpeed = 300;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
 	float RotationSpeed = 100;
@@ -99,12 +99,14 @@ public:
 	UFUNCTION()
 	void ProjectilePlus(int num);
 
+	virtual void PossessedBy(AController* NewController) override;
+
 private:
 	void MoveTank(float DeltaTime);
 	void RotateTank(float DeltaTime);
 	void RotateCannon(float DeltaTime);
 	void PrintProjectile();
-	void OnDeath();
+	virtual void OnDeath();
 	void OnHealthChanged(float CurrentHealth);
 	
 	float MoveScaleCurrent = 0;
@@ -114,7 +116,8 @@ private:
 	float RotateScaleTarget = 0;
 
 	bool CurrentCannon = 0; // 0 - Cannon, 1 - CannonSecond
-
+	
+	UPROPERTY()
 	class ATankPlayerController* TankController;
 	
 };

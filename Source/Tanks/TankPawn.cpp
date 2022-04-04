@@ -68,9 +68,7 @@ void ATankPawn::SetupCannon(bool CannonNumber)
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	TankController = Cast<ATankPlayerController>(GetController());
-
+	
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, CannonPosition->GetComponentTransform());
 	Cannon->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	
@@ -242,5 +240,12 @@ void ATankPawn::ProjectilePlus(int num)
 	}
 	
 	PrintProjectile();
+}
+
+void ATankPawn::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	TankController = Cast<ATankPlayerController>(GetController());
 }
 
