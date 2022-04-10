@@ -7,6 +7,7 @@
 #include <string>
 
 #include "TankPlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Particles/ParticleSystem.h"
@@ -47,6 +48,7 @@ ATankPawn::ATankPawn()
 
 	DestructionEffect = CreateDefaultSubobject<UParticleSystemComponent>("DestructionEffect");
 	DestructionEffect->SetupAttachment(BodyMesh);
+	
 }
 
 void ATankPawn::SetupCannon(bool CannonNumber)
@@ -75,7 +77,11 @@ void ATankPawn::BeginPlay()
 	CannonSecond = GetWorld()->SpawnActor<ACannon>(CannonTypeSecond, CannonPosition->GetComponentTransform());
 	CannonSecond->AttachToComponent(CannonPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	CannonSecond->SetActorHiddenInGame(true); //hide the second cannon
-	
+
+	if (IsValid(GameOverWidgetClass))
+	{
+		GameOverWidget = CreateWidget(GetWorld(), GameOverWidgetClass);
+	}
 }
 
 void ATankPawn::Destroyed()
@@ -162,7 +168,11 @@ void ATankPawn::PrintProjectile()
 void ATankPawn::OnDeath()
 {
 	DestructionEffect->ActivateSystem();
-	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
+
+	GameOverWidget->AddToViewport();
+
+	//Destroy();
+	//UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
 }
 
 void ATankPawn::OnHealthChanged(float CurrentHealth)

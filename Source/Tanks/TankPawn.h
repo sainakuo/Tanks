@@ -12,7 +12,9 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "TankPawn.generated.h"
+
 
 UCLASS()
 class TANKS_API ATankPawn : public ACommonShooter, public IDamageTarget
@@ -61,6 +63,12 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UParticleSystemComponent* DestructionEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<UUserWidget> GameOverWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
+	class UUserWidget* GameOverWidget;
 
 public:
 
