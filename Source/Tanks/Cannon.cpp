@@ -78,7 +78,7 @@ void ACannon::Shoot()
 	{
 	case ECannonType::FireProjectile:
 		GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Puf-Puf")));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Puf-Puf")));
 		ShootEffect->ActivateSystem();
 		AudioEffect->Play();
 		break;
@@ -111,7 +111,7 @@ void ACannon::Shoot()
 
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 0.1, 0, 10);
 		
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Piu-Piu")));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Piu-Piu")));
 		break;
 	}
 	ProjectileDecrease();
@@ -127,7 +127,7 @@ void ACannon::FireSpecial()
 	{
 	case ECannonType::FireProjectile:
 		GetWorld()->SpawnActor<AProjectile>(ProjectileClassSpecial, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Puf-Puf SPECIAL")));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Puf-Puf SPECIAL")));
 		break;
 	case ECannonType::FireTrace:
 		auto Start = ProjectileSpawnPoint->GetComponentLocation();
@@ -159,7 +159,7 @@ void ACannon::FireSpecial()
 
 		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1, 0, 15);
 		
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Piu-Piu SPECIAL")));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString(TEXT("Piu-Piu SPECIAL")));
 		break;
 	}
 	ProjectileDecrease();
@@ -184,10 +184,10 @@ void ACannon::FireSeriesTick()
 			switch (Type)
 			{
 			case ECannonType::FireProjectile:
-				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Puf-Puf SERIES")));
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Puf-Puf SERIES")));
 				break;
 			case ECannonType::FireTrace:
-				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Piu-Piu SERIES")));
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString(TEXT("Piu-Piu SERIES")));
 				break;
 			}
 			FireCountInSeriesLocal--;

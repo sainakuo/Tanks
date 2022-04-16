@@ -27,7 +27,7 @@ ATankPawn::ATankPawn()
 
 	CannonPosition = CreateDefaultSubobject<UArrowComponent>("Cannon pos");
 	CannonPosition->SetupAttachment(TurretMesh);
-
+	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring arm"));
 	SpringArm->SetupAttachment(BodyMesh);
 	SpringArm->bDoCollisionTest = false;
@@ -43,6 +43,7 @@ ATankPawn::ATankPawn()
 	HealthComponent->OnDeath.AddUObject(this, &ATankPawn::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ATankPawn::OnHealthChanged);
 
+	
 	DamageEffect = CreateDefaultSubobject<UParticleSystemComponent>("DamageEffect");
 	DamageEffect->SetupAttachment(BodyMesh);
 
@@ -168,12 +169,11 @@ void ATankPawn::PrintProjectile()
 void ATankPawn::OnDeath()
 {
 	DestructionEffect->ActivateSystem();
-
+	Destroy();
 	GameOverWidget->AddToViewport();
-
-	//Destroy();
 	//UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
 }
+
 
 void ATankPawn::OnHealthChanged(float CurrentHealth)
 {
@@ -258,4 +258,3 @@ void ATankPawn::PossessedBy(AController* NewController)
 
 	TankController = Cast<ATankPlayerController>(GetController());
 }
-

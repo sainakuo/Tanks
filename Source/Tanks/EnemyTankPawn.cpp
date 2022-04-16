@@ -11,12 +11,12 @@ void AEnemyTankPawn::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Tank Created %d"), Number));
+	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Tank Created %d"), Number));
 }
 
 void AEnemyTankPawn::OnDeath()
 {
-	DestructionEffect->ActivateSystem();
+	//DestructionEffect->ActivateSystem();
 	GetWorldTimerManager().SetTimer(TimerBeforeDeath, this, &AEnemyTankPawn::onDeathAfterDestructionEffect, 0.5, false);
 }
 

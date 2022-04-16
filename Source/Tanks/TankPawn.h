@@ -58,6 +58,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
     float TurretAcceleration = 0.1;
 
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UParticleSystemComponent* DamageEffect;
 	

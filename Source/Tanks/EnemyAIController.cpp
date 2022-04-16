@@ -97,13 +97,14 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 	{
 		PatrollingPoints.Add(Waypoint->GetActorLocation());
 	}
-
+/*
 	for (int index = 1; index < PatrollingPoints.Num(); index++)
 	{
 		DrawDebugLine(GetWorld(), PatrollingPoints[index-1], PatrollingPoints[index], FColor::Green, true);
 	}
 
 	DrawDebugLine(GetWorld(), PatrollingPoints[0], PatrollingPoints[PatrollingPoints.Num()-1], FColor::Green, true);
+	*/
 }
 
 FVector AEnemyAIController::GetShootTarget() const
