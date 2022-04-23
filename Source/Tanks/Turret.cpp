@@ -5,6 +5,7 @@
 
 #include "DrawDebugHelpers.h"
 #include "Commandlets/EditorCommandlets.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -33,12 +34,23 @@ ATurret::ATurret()
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 	HealthComponent->OnDeath.AddUObject(this, &ATurret::OnDeath);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ATurret::OnHealthChanged);
+
+	HealthWidget = CreateDefaultSubobject<UWidgetComponent>("HealthWidget");
+	HealthWidget->SetWidgetClass(HealthWidgetClass);
+	HealthWidget->SetupAttachment(BodyMesh);
 }
 
 void ATurret::TakeDamage(FDamageData Damage)
 {
 	if (HealthComponent)
 		HealthComponent->TakeDamage(Damage);
+	
+}
+
+void ATurret::OnHealthChanged(float CurrentHealth)
+{
+	Cast<UBaseHealthWidget>(HealthWidget->GetWidget())->changeHealthPercent(CurrentHealth, HealthComponent->MaxHealth);
 }
 
 // Called when the game starts or when spawned

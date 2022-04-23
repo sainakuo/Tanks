@@ -6,6 +6,7 @@
 
 #include <string>
 
+#include "BaseTankPawnStatus.h"
 #include "TankPlayerController.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -82,6 +83,11 @@ void ATankPawn::BeginPlay()
 	if (IsValid(GameOverWidgetClass))
 	{
 		GameOverWidget = CreateWidget(GetWorld(), GameOverWidgetClass);
+	}
+
+	if (IsValid(BaseTankPawnStatusClass))
+	{
+		BaseTankPawnStatusWidget = CreateWidget(GetWorld(), BaseTankPawnStatusClass);
 	}
 }
 
@@ -162,8 +168,13 @@ void ATankPawn::RotateCannon(float DeltaTime)
 
 void ATankPawn::PrintProjectile()
 {
-	GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON: ")) + FString::Printf(TEXT("%d"), Cannon->ProjectileCount));
-	GEngine->AddOnScreenDebugMessage(12345, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON SECOND: ")) + FString::Printf(TEXT("%d"), CannonSecond->ProjectileCount));
+	//GEngine->AddOnScreenDebugMessage(123, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON: ")) + FString::Printf(TEXT("%d"), Cannon->ProjectileCount));
+	//GEngine->AddOnScreenDebugMessage(12345, 10, FColor::Yellow, FString(TEXT("TOTAL CANNON SECOND: ")) + FString::Printf(TEXT("%d"), CannonSecond->ProjectileCount));
+
+	UBaseTankPawnStatus* tempBaseTankPawnStatus = Cast<UBaseTankPawnStatus>(BaseTankPawnStatusWidget);
+	
+	tempBaseTankPawnStatus->ChangeTextTotalProjectileCount(Cannon->ProjectileCount);
+	tempBaseTankPawnStatus->ChangeTextTotalTraceCount(CannonSecond->ProjectileCount);
 }
 
 void ATankPawn::OnDeath()
@@ -178,7 +189,8 @@ void ATankPawn::OnDeath()
 void ATankPawn::OnHealthChanged(float CurrentHealth)
 {
 	DamageEffect->ActivateSystem();
-	GEngine->AddOnScreenDebugMessage(12333, 10, FColor::Red, FString::Printf(TEXT("Health: %f"), CurrentHealth));
+
+	Cast<UBaseTankPawnStatus>(BaseTankPawnStatusWidget)->changeHealthPercent(CurrentHealth, HealthComponent->MaxHealth);
 }
 
 void ATankPawn::Shoot()

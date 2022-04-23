@@ -16,6 +16,7 @@
 #include "TankPawn.generated.h"
 
 
+class UBaseTankPawnStatus;
 UCLASS()
 class TANKS_API ATankPawn : public ACommonShooter, public IDamageTarget
 {
@@ -57,7 +58,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Speed")
     float TurretAcceleration = 0.1;
-
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UParticleSystemComponent* DamageEffect;
@@ -70,6 +70,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
 	class UUserWidget* GameOverWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<UUserWidget> BaseTankPawnStatusClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
+	class UUserWidget* BaseTankPawnStatusWidget;
 
 public:
 
@@ -110,13 +116,18 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void OnHealthChanged(float CurrentHealth);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire")
+	bool CurrentCannon = 0; // 0 - Cannon, 1 - CannonSecond
+
 private:
 	void MoveTank(float DeltaTime);
 	void RotateTank(float DeltaTime);
 	void RotateCannon(float DeltaTime);
 	void PrintProjectile();
 	virtual void OnDeath();
-	void OnHealthChanged(float CurrentHealth);
+	
 	
 	float MoveScaleCurrent = 0;
 	float MoveScaleTarget = 0;
@@ -124,7 +135,7 @@ private:
 	float RotateScaleCurrent = 0;
 	float RotateScaleTarget = 0;
 
-	bool CurrentCannon = 0; // 0 - Cannon, 1 - CannonSecond
+	
 	
 	UPROPERTY()
 	class ATankPlayerController* TankController;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseHealthWidget.h"
 #include "Cannon.h"
 #include "CommonShooter.h"
 #include "DamageTarget.h"
@@ -18,6 +19,7 @@ class TANKS_API ATurret : public ACommonShooter, public IDamageTarget
 	GENERATED_BODY()
 	
 public:
+
 	// Sets default values for this actor's properties
 	ATurret();
 
@@ -36,7 +38,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	USphereComponent* RangeSphere;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TSubclassOf<UBaseHealthWidget> HealthWidgetClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class UWidgetComponent* HealthWidget;
+
 	virtual void TakeDamage(FDamageData Damage) override;
+
+	void OnHealthChanged(float CurrentHealth);
 
 protected:
 	// Called when the game starts or when spawned

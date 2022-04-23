@@ -3,15 +3,29 @@
 
 #include "EnemyTankPawn.h"
 
+#include "BaseHealthWidget.h"
 #include "EnemyAIController.h"
 #include "LevelTrigger.h"
 #include "Particles/ParticleSystemComponent.h"
 
+
+AEnemyTankPawn::AEnemyTankPawn()
+{
+	HealthWidget = CreateDefaultSubobject<UWidgetComponent>("HealthWidget");
+	HealthWidget->SetWidgetClass(HealthWidgetClass);
+	HealthWidget->SetupAttachment(BodyMesh);
+}
+
+
 void AEnemyTankPawn::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+	
+}
 
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Tank Created %d"), Number));
+void AEnemyTankPawn::OnHealthChanged(float CurrentHealth)
+{
+	Cast<UBaseHealthWidget>(HealthWidget->GetWidget())->changeHealthPercent(CurrentHealth, HealthComponent->MaxHealth);
 }
 
 void AEnemyTankPawn::OnDeath()

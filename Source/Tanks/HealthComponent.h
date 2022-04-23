@@ -29,12 +29,12 @@ public:
 
 	FHealthChanged OnHealthChanged;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float MaxHealth = 10;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	float MaxHealth = 10;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float CurrentHealth;
