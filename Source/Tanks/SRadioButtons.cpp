@@ -12,6 +12,10 @@ void SRadioButtons::Construct(const FArguments& InArgs)
 	
 	Count = InArgs._Count;
 
+	CheckBoxStyle = &InArgs._Style->CheckBoxStyle;
+
+	TextBlockStyle = &InArgs._Style->TextBlockStyle;
+
 	int32 SlotsNum = Count.Get();
 	
 	CreateVerticalBox(SlotsNum);
@@ -50,19 +54,19 @@ void SRadioButtons::OnCountChangedFun(int32 NewCount)
 
 TSharedRef<SWidget> SRadioButtons::CreateCheckBox(int32 InIndex, FString InText)
 {
-	FCompositeFont MyCompFont = FCompositeFont(FName(TEXT("Roboto-Light")), "../../../Engine/Content/Slate/Fonts/Roboto-Light.ttf", EFontHinting::Default, EFontLoadingPolicy::LazyLoad);
-	TSharedPtr<const FCompositeFont> MyInCompositeFont(new FCompositeFont(MyCompFont)); 
+	//FCompositeFont MyCompFont = FCompositeFont(FName(TEXT("Roboto-Light")), "../../../Engine/Content/Slate/Fonts/Roboto-Light.ttf", EFontHinting::Default, EFontLoadingPolicy::LazyLoad);
+	//TSharedPtr<const FCompositeFont> MyInCompositeFont(new FCompositeFont(MyCompFont)); 
 	
 	return SNew(SCheckBox)
 	.IsChecked_Raw(this, &SRadioButtons::IsChecked, InIndex)
 	.OnCheckStateChanged_Raw(this, &SRadioButtons::OnCheckStateChanged, InIndex)
-	
+	.Style(CheckBoxStyle)
 	[
 		SNew(STextBlock)
 		.Text(FText::FromString(InText))
 		.ColorAndOpacity(FColor::White)
-		
-		.Font(FSlateFontInfo(MyInCompositeFont, 20))
+		//.Font(FSlateFontInfo(MyInCompositeFont, 20))
+		.TextStyle(TextBlockStyle)
 	];
 
 	

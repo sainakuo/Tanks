@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SRadioButtons.h"
 #include "Components/Widget.h"
+#include "RadioButtonsWidgetStyle.h"
 #include "RadioButtons.generated.h"
 
 class SRadioButtons;
@@ -28,6 +29,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ChangeCount(int32 NewCount);
+
+	UPROPERTY(EditAnywhere, Category = "Appearance", Meta=(DisplayName = Style))
+	FRadioButtonsStyle WidgetStyle;
 
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
