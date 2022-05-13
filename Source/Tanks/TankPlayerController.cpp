@@ -7,23 +7,29 @@
 
 ATankPlayerController::ATankPlayerController()
 {
-	
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ATankPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::MoveForward);
 
-	InputComponent->BindAxis("RotateRight", this, &ATankPlayerController::RotateRight);
+	if (InputComponent)
+	{
+		InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::MoveForward);
 
-	InputComponent->BindAction("Shoot", IE_Pressed, this,  &ATankPlayerController::OnShoot);
+		InputComponent->BindAxis("RotateRight", this, &ATankPlayerController::RotateRight);
 
-	InputComponent->BindAction("Shoot2", IE_Pressed, this,  &ATankPlayerController::FireSpecial);
+		InputComponent->BindAction("Shoot", IE_Pressed, this,  &ATankPlayerController::OnShoot);
 
-	InputComponent->BindAction("FireSeries", IE_Pressed, this,  &ATankPlayerController::StartFireSeries);
+		InputComponent->BindAction("Shoot2", IE_Pressed, this,  &ATankPlayerController::FireSpecial);
 
-	InputComponent->BindAction("ChangeCannon", IE_Pressed, this,  &ATankPlayerController::ChangeCannon);
+		InputComponent->BindAction("FireSeries", IE_Pressed, this,  &ATankPlayerController::StartFireSeries);
+
+		InputComponent->BindAction("ChangeCannon", IE_Pressed, this,  &ATankPlayerController::ChangeCannon);
+
+		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ThisClass::OnLeftMouseButtonUp);
+	}
 
 	bShowMouseCursor = true;
 }
@@ -32,6 +38,13 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	TankPawn = Cast<ATankPawn>(GetPawn());
+
+	bEnableClickEvents = true;
+}
+
+void ATankPlayerController::OnLeftMouseButtonUp()
+{
+	OnMouseButtonUp.Broadcast();
 }
 
 void ATankPlayerController::MoveForward(float Scale)

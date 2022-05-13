@@ -27,8 +27,13 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual FVector GetShootTarget() const override;
 
+	FSimpleMulticastDelegate OnMouseButtonUp;
+
 protected:
 	virtual void BeginPlay() override;
+
+	void OnLeftMouseButtonUp();
+	
 	void MoveForward(float Scale);
 	void RotateRight(float Scale);
 	void OnShoot();

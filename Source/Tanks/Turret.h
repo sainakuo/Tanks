@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UWidgetComponent* HealthWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	bool IsFriend = false;
+
 	virtual void TakeDamage(FDamageData Damage) override;
 
 	void OnHealthChanged(float CurrentHealth);

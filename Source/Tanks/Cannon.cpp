@@ -89,6 +89,8 @@ void ACannon::Shoot()
 		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_Vehicle);
 		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
 		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+		Params.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
+		
 		
 		FHitResult Result;
 		bool HasHit = GetWorld()->LineTraceSingleByObjectType(Result, Start, End, Params);

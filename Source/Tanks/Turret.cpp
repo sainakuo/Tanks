@@ -4,6 +4,7 @@
 #include "Turret.h"
 
 #include "DrawDebugHelpers.h"
+#include "EnemyTankPawn.h"
 #include "Commandlets/EditorCommandlets.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -79,7 +80,24 @@ void ATurret::Destroyed()
 void ATurret::OnBeginOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
                              UPrimitiveComponent* OtherComponent1, int I, bool bArg, const FHitResult& HitResult)
 {
-	OtherActors.Add(Actor);
+
+	auto IgnoreTurret = Cast<ATurret>(Actor);
+
+	auto EnemyTank = Cast<AEnemyTankPawn>(Actor);
+	
+
+	if (!IgnoreTurret)
+	{
+		if (!IsFriend && !EnemyTank)
+		{
+			OtherActors.Add(Actor);
+		}
+		else if (IsFriend && EnemyTank)
+		{
+			OtherActors.Add(Actor);
+		}
+	}
+		
 
 	if (!Target.IsValid())
 	{
@@ -130,6 +148,7 @@ void ATurret::Fire()
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(Cannon);
+
 	Params.bTraceComplex = true;
 	
 	if (GetWorld()->LineTraceSingleByChannel(Result, TurretMesh->GetComponentLocation(), Target->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params))

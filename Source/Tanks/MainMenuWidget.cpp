@@ -9,8 +9,8 @@ void UMainMenuWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	
-	if (RadioButtons_test)
-		RadioButtons_test->WidgetStyle = FMyCoreStyle::Get().GetWidgetStyle<FRadioButtonsStyle>("WS_RadioButtons");
+	//if (RadioButtons_test)
+	//	RadioButtons_test->WidgetStyle = FMyCoreStyle::Get().GetWidgetStyle<FRadioButtonsStyle>("WS_RadioButtons");
 
 	if (Button_play_ws1)
 		Button_play_ws1->WidgetStyle =  FMyCoreStyle::Get().GetWidgetStyle<FButtonStyle>("WS_Button");
@@ -30,6 +30,6 @@ void UMainMenuWidget::NativePreConstruct()
 	if (Button_inventory)
 		Button_inventory->WidgetStyle =  FMyCoreStyle::Get().GetWidgetStyle<FButtonStyle>("WS_Button");
 
-	if (Button_ok)
-		Button_ok->WidgetStyle =  FMyCoreStyle::Get().GetWidgetStyle<FButtonStyle>("WS_Button");
+	//if (Button_ok)
+	//	Button_ok->WidgetStyle =  FMyCoreStyle::Get().GetWidgetStyle<FButtonStyle>("WS_Button");
 }

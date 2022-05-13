@@ -50,6 +50,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UButton* Button_inventory;
 
+	/*
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	URadioButtons* RadioButtons_test;
 
@@ -58,6 +59,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UButton* Button_ok;
+	*/
 
 	virtual void NativePreConstruct() override;
 };
