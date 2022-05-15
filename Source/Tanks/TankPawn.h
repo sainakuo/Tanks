@@ -8,15 +8,22 @@
 #include "CommonShooter.h"
 #include "DamageTarget.h"
 #include "HealthComponent.h"
+#include "InventoryComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/Character.h"
 #include "TankPawn.generated.h"
 
 
+class UInventoryWidget;
 class UBaseTankPawnStatus;
+
+class UInventoryComponent;
+class UInventoryManagerComponent;
+
 UCLASS()
 class TANKS_API ATankPawn : public ACommonShooter, public IDamageTarget
 {
@@ -77,6 +84,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widgets")
 	class UUserWidget* BaseTankPawnStatusWidget;
 
+	UPROPERTY(EditDefaultsOnly)
+	UInventoryComponent* LocalInventory;
+
+	UPROPERTY(EditDefaultsOnly)
+	UInventoryManagerComponent* InventoryManager;
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI|Move")
@@ -120,6 +133,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire")
 	bool CurrentCannon = 0; // 0 - Cannon, 1 - CannonSecond
+
+	UFUNCTION(BlueprintCallable)
+	UInventoryWidget* GetInventoryWidget();
 
 private:
 	void MoveTank(float DeltaTime);

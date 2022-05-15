@@ -7,6 +7,7 @@
 #include <string>
 
 #include "BaseTankPawnStatus.h"
+#include "InventoryManagerComponent.h"
 #include "TankPlayerController.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -50,7 +51,9 @@ ATankPawn::ATankPawn()
 
 	DestructionEffect = CreateDefaultSubobject<UParticleSystemComponent>("DestructionEffect");
 	DestructionEffect->SetupAttachment(BodyMesh);
-	
+
+	LocalInventory = CreateDefaultSubobject<UInventoryComponent>("LocalInventory");
+	InventoryManager = CreateDefaultSubobject<UInventoryManagerComponent>("InventoryManager");
 }
 
 void ATankPawn::SetupCannon(bool CannonNumber)
@@ -88,6 +91,12 @@ void ATankPawn::BeginPlay()
 	if (IsValid(BaseTankPawnStatusClass))
 	{
 		BaseTankPawnStatusWidget = CreateWidget(GetWorld(), BaseTankPawnStatusClass);
+	}
+
+	if (InventoryManager)
+	{
+		LocalInventory->Init();
+		InventoryManager->Init(LocalInventory);
 	}
 }
 
@@ -135,6 +144,11 @@ void ATankPawn::MoveForward(float Scale)
 void ATankPawn::RotateRight(float Scale)
 {
 	RotateScaleTarget = Scale;
+}
+
+UInventoryWidget* ATankPawn::GetInventoryWidget()
+{
+	return InventoryManager->InventoryWidget;
 }
 
 void ATankPawn::MoveTank(float DeltaTime)
