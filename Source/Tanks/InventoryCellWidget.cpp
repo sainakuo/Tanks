@@ -24,6 +24,7 @@ bool UInventoryCellWidget::AddItem(const FInventorySlotInfo& InSlot, const FInve
 	{
 		CountText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CountText->SetText(FText::FromString(FString::FromInt(InSlot.Count)));
+		Item.Count = InSlot.Count;
 	}
 
 	bHasItem = true;
@@ -51,6 +52,12 @@ void UInventoryCellWidget::Clear()
 	}
 
 	bHasItem = false;
+	Item = FInventorySlotInfo();
+}
+
+UInventoryComponent* UInventoryCellWidget::GetParentInventory() const
+{
+	return ParentInventoryWidget ? ParentInventoryWidget->ParentInventory : nullptr;
 }
 
 FReply UInventoryCellWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

@@ -9,7 +9,7 @@
 #include "InventoryWidget.generated.h"
 
 class UUniformGridPanel;
-class UInventoryCellWidget;
+class UInventoryComponent;
 
 /**
  * 
@@ -29,6 +29,9 @@ public:
 
 	FOnItemDrop OnItemDrop;
 
+	UPROPERTY()
+	UInventoryComponent* ParentInventory;
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly)
@@ -37,16 +40,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UInventoryCellWidget> CellWidgetClass;
 
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
 	UUniformGridPanel* CellsPanel;
 
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
 	UInventoryCellWidget* GoldCell;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TArray<UInventoryCellWidget*> CellWidgets;
 
 	UInventoryCellWidget* CreateCell();
+
+	void InitCell(UInventoryCellWidget* NewCell);
 
 	void OnItemDropFunc(UInventoryCellWidget* From, UInventoryCellWidget* To);
 };

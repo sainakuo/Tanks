@@ -19,6 +19,15 @@ enum class EItemRarity: uint8
 	Ir_Epic,
 };
 
+UENUM()
+enum class EEquipSlot : uint8
+{
+	Es_Cannon,
+	Es_Turret,
+	Es_Body,
+	Es_Tracks
+};
+
 class UInventoryCellWidget;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemDrop, UInventoryCellWidget* /*from*/, UInventoryCellWidget* /*to*/)
@@ -39,6 +48,9 @@ struct FInventoryItemInfo : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, Category="Type")
 	EItemRarity Rare;
+
+	UPROPERTY(EditDefaultsOnly, Category="Type")
+	EEquipSlot EquipSlot;
 
 	UPROPERTY(EditDefaultsOnly, Category="Visual")
 	TSoftObjectPtr<UTexture2D> Icon;

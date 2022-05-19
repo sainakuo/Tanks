@@ -7,6 +7,8 @@
 #include "Cannon.h"
 #include "CommonShooter.h"
 #include "DamageTarget.h"
+#include "EquipInterface.h"
+#include "EquipInventoryComponent.h"
 #include "HealthComponent.h"
 #include "InventoryComponent.h"
 #include "Camera/CameraComponent.h"
@@ -25,7 +27,7 @@ class UInventoryComponent;
 class UInventoryManagerComponent;
 
 UCLASS()
-class TANKS_API ATankPawn : public ACommonShooter, public IDamageTarget
+class TANKS_API ATankPawn : public ACommonShooter, public IDamageTarget, public IEquipInterface
 {
 	GENERATED_BODY()
 
@@ -88,7 +90,16 @@ protected:
 	UInventoryComponent* LocalInventory;
 
 	UPROPERTY(EditDefaultsOnly)
+	UEquipInventoryComponent* EquipInventory;
+
+	UPROPERTY(EditDefaultsOnly)
 	UInventoryManagerComponent* InventoryManager;
+
+	virtual void EquipItem(EEquipSlot Slot, FName ItemId) override;
+
+	virtual void UnEquipItem(EEquipSlot Slot, FName ItemId) override;
+
+	UStaticMeshComponent* GetEquipComponent(EEquipSlot EquipSlot);
 
 public:
 
@@ -136,6 +147,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UInventoryWidget* GetInventoryWidget();
+	
+	UFUNCTION(BlueprintCallable)
+	UInventoryWidget* GetEquipWidget();
 
 private:
 	void MoveTank(float DeltaTime);

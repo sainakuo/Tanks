@@ -21,10 +21,15 @@ public:
 
 	void Init(UInventoryComponent* InInventoryComponent);
 
+	void InitEquip(UInventoryComponent* InInventoryComponent);
+
 	const FInventoryItemInfo* GetItemData(const FName& InID) const;
 
 	UPROPERTY()
 	UInventoryWidget* InventoryWidget;
+
+	UPROPERTY()
+	UInventoryWidget* EquipWidget;
 	
 protected:
 
@@ -40,6 +45,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UInventoryWidget> EquipWidgetClass;
 
 
 	void OnItemDropFunc(UInventoryCellWidget* From, UInventoryCellWidget* To);

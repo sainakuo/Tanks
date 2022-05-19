@@ -4,10 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "InventoryItemInfo.h"
+#include "InventoryComponent.h"
+#include "InventoryWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "InventoryCellWidget.generated.h"
+
+class UInventoryWidget;
+class UInventoryComponent;
+
 
 /**
  * 
@@ -40,10 +46,16 @@ public:
 
 	const FInventorySlotInfo& GetItem() const {return Item; }
 
+	UPROPERTY(EditAnywhere)
 	int32 IndexInInventory = INDEX_NONE;
 
 	FOnItemDrop OnItemDrop;
 
+	UPROPERTY()
+	UInventoryWidget* ParentInventoryWidget;
+	
+	UInventoryComponent* GetParentInventory() const;
+		
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 

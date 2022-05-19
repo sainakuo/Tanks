@@ -53,6 +53,7 @@ ATankPawn::ATankPawn()
 	DestructionEffect->SetupAttachment(BodyMesh);
 
 	LocalInventory = CreateDefaultSubobject<UInventoryComponent>("LocalInventory");
+	EquipInventory = CreateDefaultSubobject<UEquipInventoryComponent>("EquipInventory");
 	InventoryManager = CreateDefaultSubobject<UInventoryManagerComponent>("InventoryManager");
 }
 
@@ -97,6 +98,7 @@ void ATankPawn::BeginPlay()
 	{
 		LocalInventory->Init();
 		InventoryManager->Init(LocalInventory);
+		InventoryManager->InitEquip(EquipInventory);
 	}
 }
 
@@ -114,6 +116,44 @@ void ATankPawn::TakeDamage(FDamageData Damage)
 {
 	if (HealthComponent)
 		HealthComponent->TakeDamage(Damage);
+}
+
+void ATankPawn::EquipItem(EEquipSlot Slot, FName ItemId)
+{
+	UStaticMeshComponent* Comp = GetEquipComponent(Slot);
+	if (Comp)
+	{
+		auto* Info = InventoryManager->GetItemData(ItemId);
+		Comp->SetStaticMesh(Info->Mesh.LoadSynchronous());
+		Comp->SetHiddenInGame(false);
+	}
+}
+
+void ATankPawn::UnEquipItem(EEquipSlot Slot, FName ItemId)
+{
+	UStaticMeshComponent* Comp = GetEquipComponent(Slot);
+	if (Comp)
+	{
+		Comp->SetHiddenInGame(true);
+	}
+}
+
+UStaticMeshComponent* ATankPawn::GetEquipComponent(EEquipSlot EquipSlot)
+{
+	FName Tag;
+
+	switch (EquipSlot)
+	{
+		case EEquipSlot::Es_Cannon: Tag = "Cannon"; break;
+		case EEquipSlot::Es_Turret: Tag = "Turret"; break;
+		case EEquipSlot::Es_Body: Tag = "Body"; break;
+		case EEquipSlot::Es_Tracks: Tag = "Tracks"; break;
+		default: return nullptr;
+	}
+
+	TArray<UActorComponent*> Found = GetComponentsByTag(UStaticMeshComponent::StaticClass(), Tag);
+
+	return Found.IsValidIndex(0) ? Cast<UStaticMeshComponent>(Found[0]) : nullptr;
 }
 
 // Called every frame
@@ -149,6 +189,12 @@ void ATankPawn::RotateRight(float Scale)
 UInventoryWidget* ATankPawn::GetInventoryWidget()
 {
 	return InventoryManager->InventoryWidget;
+}
+
+UInventoryWidget* ATankPawn::GetEquipWidget()
+{
+	return InventoryManager->EquipWidget;
+	
 }
 
 void ATankPawn::MoveTank(float DeltaTime)
